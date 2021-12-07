@@ -22,13 +22,13 @@ def build_message(bmp280):
     )
 
     return msg, {
-        "imei": "5gmodemimei",
-        "serial": 9068,
-        "momsn": 669,
-        "transmit_time": "21-12-06 10:35:52",
-        "iridium_latitude": 31.4741,
-        "iridium_longitude": 144.5242,
-        "iridium_cep": 108,
+        "imei": "5Gmodem",
+        "serial": 0,
+        "momsn": 0,
+        "transmit_time": "",
+        "iridium_latitude": 51.85,
+        "iridium_longitude": -0.96142,
+        "iridium_cep": 0,
         "data": f"{msg}".encode().hex()
     }
 
@@ -39,7 +39,7 @@ def sbd_transfer(rb:RockBlock):
     # loop as needed
     retry = 0
     while status[0] > 8:
-        time.sleep(10)
+        time.sleep(5)
         status = rb.satellite_transfer()
         retry += 1
 
@@ -60,13 +60,15 @@ def main():
     msg, data = build_message(bmp280)
 
     try:
+        logger.info("Sending through 5G Modem...")
         r = requests.post(get_proxy_url(), data=json.dumps(data), timeout=10)
         r.raise_for_status()
     except Exception as e:
         # If message can't be sent through default OS interface, try satellite
+        logger.info("Couldn't be sent through 5G Modem.")
         with serial.Serial(rb_serial_interface, baudrate=19200) as serial_conn:
             rb = RockBlock(serial_conn)
             rb.text_out = json.dumps(msg)
-            logger.info("Talking to satellite...")
+            logger.info("Sending through Satellite...")
             sbd_transfer(rb)
-            logger.info("\nDONE.")
+            logger.info("DONE.")
