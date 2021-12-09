@@ -6,7 +6,11 @@ this one to a remote proxy for their corresponding storage.
 It uses a RockBlock board for sending the data using an Iridium SBD 9602 in the case that the default 5G interface isn't
 available.
 
-## Usage
+## Deployment
+
+A RaspiOS image with `5.4.51` kernel version must be used for this deployment and can be downloaded from:
+
+https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2020-08-24/2020-08-20-raspios-buster-armhf.zip
 
 Copy/clone the content of this repo to the RPi and run the install script
 
